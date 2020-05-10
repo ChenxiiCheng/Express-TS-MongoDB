@@ -87,3 +87,55 @@ tsconfig.json 中
 ```
 yarn add tsconfig-paths --dev
 ```
+
+### 使用 MongoDB，定义 Schema 的时候要配置下泛型接口
+
+> 两种写法都可以，要不要导出是看其他地方有没有用到这个接口定义
+
+```
+import { model, Document, Schema } from 'mongoose';
+
+export type MessageModel = Document & {
+  subject: String;
+  body: String;
+  completedAt: Date;
+  tags: string[];
+};
+
+// 或者
+
+interface MessageModel extends Document {
+  subject: String;
+  body: String;
+  completedAt: Date;
+  tags: string[];
+}
+
+const MessageSchema = new Schema(
+  {
+    subject: {
+      type: String,
+      trim: true,
+      required: true,
+    },
+    body: {
+      type: String,
+      required: true,
+    },
+    completedAt: {
+      type: Date,
+    },
+    tags: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'Tag',
+      },
+    ],
+  },
+  {
+    timestamps: true,
+  }
+);
+
+export default model<MessageModel>('Message', MessageSchema);
+```

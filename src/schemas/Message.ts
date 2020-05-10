@@ -1,6 +1,18 @@
 import mongoose, { Document, Schema } from 'mongoose';
 
-export type MessageModel = Document & {};
+// export type MessageModel = Document & {
+//   subject: String;
+//   body: String;
+//   completedAt: Date;
+//   tags: string[];
+// };
+
+interface MessageModel extends Document {
+  subject: String;
+  body: String;
+  completedAt: Date;
+  tags: string[];
+}
 
 const MessageSchema = new Schema(
   {
